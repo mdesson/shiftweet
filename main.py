@@ -19,8 +19,8 @@ email_from = config['gmail']['FROM_ADDRESS']
 email_password = config['gmail']['APP_PASSWORD']
 email_to = config['gmail']['TO_ADDRESSES']
 
-account_name = 'DuvalMagic'
-max_hours_in_past = 1000  # max age of tweet, in hours
+account_name = 'dgSHiFTCodesBL3'
+max_hours_in_past = 6  # max age of tweet, in hours
 
 # Connect to Twitter
 auth = tweepy.OAuthHandler(api_key, api_secret_key)
@@ -28,8 +28,8 @@ auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth)
 
 # Get Randy's timeline
-randy = api.get_user(account_name, tweet_mode='extended')
-timeline = randy.timeline(tweet_mode='extended')
+bl3_twitter_account = api.get_user(account_name, tweet_mode='extended')
+timeline = bl3_twitter_account.timeline(tweet_mode='extended')
 
 # Output Tweets
 shift_tweets = []
@@ -40,11 +40,8 @@ for status in timeline:
     date = datetime.strptime(
         status._json['created_at'], '%a %b %d %H:%M:%S %z %Y')
     diff = datetime.now(timezone.utc) - date
-    is_shift_tweet = re.search(
-        '(shift|[a-z0-9]{5}-[a-z0-9]{5}-[a-z0-9]{5}-[a-z0-9]{5}-[a-z0-9]{5})',
-        status._json['full_text'].lower())
 
-    if diff.seconds / 60 <= max_hours_in_past and is_shift_tweet:
+    if diff.seconds / 60 <= max_hours_in_past:
         shift_tweets.append(
             f'https://twitter.com/{account_name}/status/{status.id}')
 
